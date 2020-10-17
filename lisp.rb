@@ -1,16 +1,23 @@
 # frozen_string_literal: true
 
 begin
+  use_readline = (require 'readline')
+rescue
+  use_readline = false
+end
+
+begin
   # Just for development
-  require 'rb-readline'
   require 'pry'
 rescue
 end
 
 class Interpreter
-  attr_accessor :env_defs
+  attr_accessor :env_defs, :use_readline
 
-  def initialize
+  def initialize(use_readline)
+    @use_readline = use_readline
+
     @env_defs = {}
 
     env_defs['+'] = Proc.new do |args|
@@ -129,10 +136,17 @@ class Interpreter
   end
 
   def read_input
-    STDOUT.print('> ')
-    line = STDIN.gets&.strip
+    line = if use_readline
+      Readline.readline('> ')&.strip
+    else
+      STDOUT.print('> ')
+      STDIN.gets&.strip
+    end
+
     return nil if line.nil? || ['quit', 'exit'].include?(line.downcase)
-    return read_input if line.empty?
+    return read_input if line.size == 0
+
+    Readline::HISTORY.push(line)
 
     tokens = expand(line, 0)
 
@@ -214,4 +228,4 @@ class Interpreter
   end
 end
 
-Interpreter.new.start_main_loop
+Interpreter.new(use_readline).start_main_loop
