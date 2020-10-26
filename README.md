@@ -2,10 +2,16 @@
 
 This is the smallest Lisp interpreter I've written.
 
-It can:
-- Interpret recursive and scoped functions
-- Support boolean, integer and list types (with `cons`)
-- Includes a small set of builtin functions
+## Features
+
+- Interprets programs with the typical read-eval-print loop.
+- Function definition with `(define name body)` or `(define (name arg0 ...) body)`.
+- Integer, double, boolean and `cons` based list data types.
+- Lists builtin functions `cons`, `car` and `cdr`.
+- Conditions with `(if cond then else)` builtin function.
+- Loops with conditions and recursion only.
+- Standard output with `print` builtin function.
+- `quote` builtin function and `'` shorthand.
 
 ```sh
 ./lisp < example.lisp
